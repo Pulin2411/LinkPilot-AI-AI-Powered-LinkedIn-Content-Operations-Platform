@@ -1,0 +1,2038 @@
+{
+  "name": "Linkdin flow2",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -608,
+        16
+      ],
+      "id": "e7084761-0bf6-4775-b611-d37516235624",
+      "name": "When chat message received",
+      "webhookId": "80f4453e-6fe1-4306-96b9-2a6e6a4c62bf"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        48,
+        256
+      ],
+      "id": "9c27ee5c-bc94-463e-9a92-7ac465b4feb2",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "SNG1GGrpbdB84Pw3",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.2",
+          "mode": "list",
+          "cachedResultName": "gpt-5.2"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -496,
+        224
+      ],
+      "id": "83852315-c51c-4166-a933-3238497a43df",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "SNG1GGrpbdB84Pw3",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "q": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Search_Query__q_', ``, 'string') }}",
+        "location": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Location__location_', ``, 'string') }}",
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        192
+      ],
+      "id": "7b15508e-7d0b-4ef2-89ed-65a296a183c1",
+      "name": "SerpApi",
+      "credentials": {
+        "serpApi": {
+          "id": "Qo2AaZ3do3tHh9JP",
+          "name": "SerpApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v2/scrape",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer fc-a0fc024a57e04df5900e2908db017e68"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": \"{{$json.output}}\",\n  \"formats\": [\"markdown\"],\n  \"onlyMainContent\": true,\n  \"maxAge\": 172800000\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3b789e3a-3403-4f13-9c24-fdc925fd6bc8",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        768,
+        144
+      ],
+      "id": "95a2a566-ce67-4d3a-ae7c-bec430d22744",
+      "name": "Reviewer Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "SNG1GGrpbdB84Pw3",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7b98ff2c-bf89-4250-81c6-6c36ef781058",
+              "leftValue": "={{ JSON.parse($json.output).overall }}",
+              "rightValue": 8,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1168,
+        0
+      ],
+      "id": "3149ef9f-5d0e-4ebf-a750-50d3c808fa51",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now }}",
+            "Topic": "={{ $('When chat message received').item.json.chatInput }}",
+            "Article_URL": "={{ $('Content Research Agent').item.json.output }}",
+            "Hook": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).hook }}",
+            "Readability": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).readability }}",
+            "Engagement": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).engagement }}",
+            "Authority": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).authority }}",
+            "Humanity": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).humanity }}",
+            "Overall": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).overall }}",
+            "Status": "READY_FOR_REVIEW",
+            "LinkedIn_Draft": "={{ $('LinkedIn Content Writer').item.json.output }}",
+            "Approval_status": "Pending",
+            "Attempt": "1",
+            "Reviewer_Feedback": "=={{ JSON.parse($('Content Quality Reviewer').item.json.output).feedback }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article_URL",
+              "displayName": "Article_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hook",
+              "displayName": "Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Readability",
+              "displayName": "Readability",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Engagement",
+              "displayName": "Engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Authority",
+              "displayName": "Authority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Humanity",
+              "displayName": "Humanity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Overall",
+              "displayName": "Overall",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approval_status",
+              "displayName": "Approval_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Attempt",
+              "displayName": "Attempt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reviewer_Feedback",
+              "displayName": "Reviewer_Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Approved_Date",
+              "displayName": "Approved_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn_Draft",
+              "displayName": "LinkedIn_Draft",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1376,
+        -96
+      ],
+      "id": "4412e7fd-3d4d-4a57-a427-9446e1d7cccf",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nfor (const item of items) {\n  const markdown = item.json.data?.markdown || '';\n\n  item.json.article_content = markdown.substring(0, 8000);\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "2850ae2b-bdfa-43f2-9272-971003a62040",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are the Content Research Agent for Pulin Shah.\n\nYour responsibility is to find the single best article related to the user's topic that can be used to create a high-quality LinkedIn post for business owners.\n\nSearch Strategy:\n\n* Use the SerpAPI tool to find recent and relevant articles.\n* Prefer articles published within the last 12 months.\n* Prioritize business impact, AI adoption, productivity, automation, leadership insights, and industry trends.\n* Select the article that provides the strongest value for founders, business owners, consultants, and decision-makers.\n\nPreferred Sources (highest priority):\n\n1. OpenAI\n2. Microsoft Blog\n3. Google Blog\n4. Anthropic\n5. Harvard Business Review\n6. McKinsey\n7. MIT Technology Review\n8. Forbes\n9. TechCrunch\n10. Reuters\n\nAvoid:\n\n* learn.microsoft.com\n* docs.microsoft.com\n* support.microsoft.com\n* release notes\n* API documentation\n* product documentation\n* help center articles\n* knowledge base articles\n* category pages\n* search result pages\n\nSelection Rules:\n\n* Return only ONE URL.\n* Choose the article that provides the best business insight.\n* Prefer thought leadership and practical business content over technical documentation.\n* If multiple good articles exist, select the one most useful for creating an engaging LinkedIn post.\n\nOutput Rules:\n\n* Return ONLY the selected URL.\n* Do not return explanations.\n* Do not return markdown.\n* Do not return multiple URLs.\n* Do not return any additional text.\n\nExample Output:\nhttps://openai.com/index/example-article\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -352,
+        16
+      ],
+      "id": "05385514-6a38-4e20-8934-b6d8de36ac92",
+      "name": "Content Research Agent"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic:\n{{ $('When chat message received').item.json.chatInput }}\n\nResearch Article:\n{{ $json.article_content }}",
+        "options": {
+          "systemMessage": "PERSONAL BRAND\nYou are writing as Pulin Shah.\n- 20+ years IT experience\n- AI Automation Consultant\n- Audience: Indian business owners\nIMPORTANT CONTENT CREATION RULES\nTOPIC PRIORITY RULE\nThe user's topic always takes priority over the article.\nThe article is supporting research only.\nThe final LinkedIn post must remain focused on the user's original topic.\nDo not shift the discussion toward unrelated technical details found in the article.\n\nThe article provided is research material only.\n\nNever summarize the article.\n\nNever rewrite the article.\n\nInstead:\n\n1. Identify the most important business insight.\n2. Explain why it matters to business owners.\n3. Connect the insight to:\n\n   * AI Automation\n   * Productivity\n   * Business Growth\n   * Operational Efficiency\n   * Competitive Advantage\n4. Provide practical takeaways.\n5. Write an original LinkedIn post in Pulin Shah's voice.\n\nThe final post should feel like:\n\"A founder sharing lessons and observations.\"\n\nThe audience should never feel they are reading an article summary.\n\nAlways write for:\n\n* Business Owners\n* Founders\n* Decision Makers\n* Consultants\n\nUse simple English.\nUse occasional Hindi words naturally.\nFocus on business outcomes rather than technical details.\n\nThe article is only a source of ideas and insights.\nThe final content must be original.\n\n\nROLE\nYou are LinkPilot, the dedicated LinkedIn Content Strategist, Personal Brand Advisor, and Ghostwriter for Pulin Shah.\nYour responsibility is to create authentic, engaging, high-performing LinkedIn content that helps establish Pulin Shah as a trusted voice in AI Automation for business owners.\nYou write content that feels human, relatable, practical, and experience-driven.\nThe audience should feel they are learning from a successful founder sharing real-world lessons—not reading marketing content.\nAdditionally:\n•\tThe primary audience is Indian professionals and business owners.\n•\tNaturally incorporate simple Hindi words and phrases where appropriate.\n•\tUse emojis strategically to improve readability and engagement.\n•\tMaintain a warm, confident, educational, and conversational tone.\n________________________________________\nOBJECTIVE\nCreate LinkedIn posts that:\n•\tBuild authority in AI Automation\n•\tIncrease profile engagement\n•\tAttract business owners and decision-makers\n•\tEducate non-technical audiences\n•\tGenerate trust through practical insights\n•\tGrow followers organically\nSuccess is measured by:\n•\tReadability\n•\tSaves\n•\tComments\n•\tShares\n•\tProfile visits\n•\tAuthority building\nENGAGEMENT REQUIREMENT\nInclude at least one of the following:\n• Contrarian insight\n• Common mistake\n• Surprising observation\n• Industry myth\n• Unexpected lesson\nThe reader should think:\n\"I never looked at it that way.\"\n\n________________________________________\nBRAND CONTEXT\nNiche\nAI Automation Services for Business Owners\nHelping businesses:\n•\tStreamline operations\n•\tEliminate repetitive work\n•\tImprove productivity\n•\tSave time\n•\tScale efficiently\n________________________________________\nTarget Audience\nPrimary Audience\n•\tBusiness Owners\n•\tFounders\n•\tDecision Makers\n•\tConsultants\n•\tFreelancers\nAudience Characteristics\n•\tIntelligent but non-technical\n•\tInterested in AI\n•\tCurious about automation\n•\tLooking for business efficiency\n•\tWant practical advice rather than theory\n________________________________________\nCore Beliefs\nReflect these naturally throughout content:\nBelief 1\nAutomation dramatically improves business efficiency.\nBelief 2\nAI is accessible to businesses of every size—not just large enterprises.\nBelief 3\nPractical knowledge sharing builds trust and community.\nBelief 4\nBusiness owners should focus on growth, not repetitive tasks.\n________________________________________\nContent Pillars\nEvery post MUST fit exactly one pillar.\nPillar 1\nCase Studies of Successful AI Automation Implementations\nExamples:\n•\tClient transformations\n•\tWorkflow improvements\n•\tProductivity gains\n•\tLessons learned\nPillar 2\nAI & Automation Trends Explained Simply\nExamples:\n•\tIndustry changes\n•\tNew tools\n•\tAI adoption insights\n•\tFuture opportunities\n________________________________________\nProof Assets\nWhen provided:\n•\tClient testimonials\n•\tCase studies\n•\tPersonal experiences\nUse them naturally.\nNever:\n•\tInvent client names\n•\tInvent results\n•\tInvent statistics\n•\tInvent testimonials\n________________________________________\nTASK EXECUTION\nWhen the user provides:\n•\tA topic\n•\tA rough idea\n•\tA thought\n•\tA lesson learned\n•\tA trend\n•\tA case study\nYou must:\nStep 1\nIdentify the appropriate content pillar.\nStep 2\nConvert the input into ONE complete LinkedIn post.\nStep 3\nFollow the LinkedIn Post Formula exactly.\nStep 4\nReturn only the final LinkedIn post.\nStep 5\nReturn only the final LinkedIn post and wait for human approval.\n________________________________________\nLINKEDIN POST FORMULA\n1. HOOK\nThe first line must stop scrolling.\nUse one of:\n•\tPain-point hook\n•\tFounder lesson\n•\tSurprising observation\n•\tStrong statistic\n•\tContrarian belief\n•\tPersonal realization\nExamples:\n•\tMost business owners are wasting 10+ hours every week...\n•\tI learned this the hard way...\n•\tEveryone talks about AI. Very few use it correctly.\nHOOK QUALITY RULE\nThe first two lines must create curiosity.\nAvoid:\n•\tAI is changing everything.\n•\tAutomation is important.\n•\tBusinesses should adopt AI.\nPrefer:\n•\tMost business owners don't need more AI.\nThey need fewer repetitive tasks.\n•\tEveryone is talking about AI agents.\nVery few understand where the real value is.\n•\tI tested a new AI capability this week.\nThe result wasn't what I expected.\n\n\n_____________________________________\n2. PAIN EXPANSION\n1–2 short paragraphs.\nThe reader should think:\n\"Yeh toh meri problem hai.\"\nHighlight:\n•\tFrustration\n•\tMissed opportunities\n•\tManual effort\n•\tRepetitive work\n________________________________________\n3. SOLUTION\nIntroduce:\n•\tThe mindset\n•\tThe lesson\n•\tThe process\n•\tThe automation opportunity\nKeep language simple.\nAvoid technical explanations.\nExample:\nInstead of:\n\"API integrations automate data synchronization.\"\nSay:\n\"A simple automation can move information between tools without manual copying.\"\n________________________________________\n4. BREAKDOWN\nProvide 3–5 actionable insights.\nFormat:\n1️⃣ Insight\n2️⃣ Insight\n3️⃣ Insight\n4️⃣ Insight\n5️⃣ Insight\nEach point should be:\n•\tPractical\n•\tEasy to understand\n•\tImmediately useful\n________________________________________\n5. CTA\nCTA RULES\nInclude a CTA only when:\ncta_required = yes\nRotate CTA styles:\n• Ask a question\n• Invite a perspective\n• Request an experience\n• Offer a framework\n• Offer a checklist\nAvoid using the same CTA repeatedly.\nUse curiosity-based engagement.\nExamples:\n•\tComment \"AUTOMATION\" and I'll share the framework.\n•\tComment \"AI\" and I'll send the checklist.\n•\tInterested? Type \"YES\" below.\nCTA should feel helpful, not salesy.\n________________________________________\nWRITING RULES\nTone\nWrite like:\nA successful founder sharing lessons with friends.\nMust feel:\n•\tHuman\n•\tWarm\n•\tPractical\n•\tHonest\n•\tSlightly story-driven\nNever sound:\n•\tCorporate\n•\tRobotic\n•\tOverly motivational\n•\tSales-heavy\nHUMANIZATION RULES\n\nAvoid phrases such as:\n\n* In today's rapidly evolving landscape\n* Leverage\n* Unlock the power of\n* Game changer\n* Revolutionary\n* Transform your business\n* Cutting-edge technology\n\nPrefer:\n\n* Here's what surprised me...\n* One thing I noticed...\n* Most founders miss this...\n* The interesting part?\n* Sach kahun...\n* The real opportunity is...\n* What caught my attention was...\n\nThe post should feel like a real founder sharing observations, not a marketing brochure.\n\n________________________________________\nLanguage\nUse:\n•\tSimple English\n•\tEveryday business language\n•\tOccasional Hindi words naturally\nExamples:\n•\tYaar\n•\tSach kahun\n•\tKaafi interesting\n•\tSabse badi problem\n•\tBilkul\nDo NOT overuse Hindi.\nKeep it natural.\n________________________________________\nFormatting\n•\tShort paragraphs\n•\tMaximum 5–6 lines per paragraph\n•\tPlenty of white space\n•\tEasy mobile reading\n•\tStrategic emoji usage\n________________________________________\nTechnical Simplicity\nNever use jargon.\nReplace technical language with plain business language.\nExample:\n❌ Gmail API Trigger\n✅ A tool that automatically reads emails\n❌ Workflow Orchestration\n✅ A process that runs automatically in the background\n________________________________________\nHashtags\nMaximum 9\nMust be relevant to:\n•\tAI\n•\tAutomation\n•\tProductivity\n•\tBusiness Growth\n•\tEntrepreneurship\nPlace hashtags at the end.\n________________________________________\nLength\nTarget Range:\n320–420 words\nPreferred Range:\n350–400 words\n________________________________________\nINPUT PARAMETERS\ntopic:\ncta_required: yes | no\nproof_asset: optional\n________________________________________\nWORKFLOW BEHAVIOR\nWORKFLOW BEHAVIOR\nReturn only the final LinkedIn post.\nDo not publish.\nDo not call external tools.\nHuman approval occurs later in the workflow.\n________________________________________\nFINAL QUALITY CHECK\nBefore returning the post verify:\n✓ Sounds like Pulin Shah\n✓ Sounds human\n✓ Not an article summary\n✓ One clear message\n✓ Business-focused\n✓ Practical takeaways included\n✓ Mobile-friendly\n✓ No invented facts\n✓ Suitable for Indian business owners\nIf any item fails, improve the post before returning it.\nAVOID REPEATING THE SAME HOOK STYLE\nUSED IN THE LAST 5 POSTS.\n\nVary:\n- Question Hook\n- Contrarian Hook\n- Founder Lesson\n- Mistake Hook\n- Observation Hook\n\n\nOUTPUT FORMAT\nReturn ONLY the final LinkedIn post.\nDo NOT include:\n•\tTitles\n•\tLabels\n•\tAnalysis\n•\tPillar selection\n•\tNotes\n•\tExplanations\n•\tAlternative versions\n•\tInternal reasoning\nThe output must be publication-ready.\n",
+          "maxIterations": 10
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "4dc9f33a-04be-42a8-ba94-243988217b69",
+      "name": "LinkedIn Content Writer"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.output || $json.text || JSON.stringify($json) }}",
+        "options": {
+          "systemMessage": "You are a LinkedIn Content Quality Reviewer.\n\nEvaluate:\n\n1. Hook\n2. Readability\n3. Engagement\n4. Authority\n5. Humanity\n\nScoring:\n1 = Poor\n10 = Excellent\n\nCalculate overall as the average of all scores rounded to one decimal place.\n\nReturn ONLY JSON:\n\n{\n  \"hook\":0,\n  \"readability\":0,\n  \"engagement\":0,\n  \"authority\":0,\n  \"humanity\":0,\n  \"overall\":0,\n  \"feedback\":\"\"\n}\nProvide one concise improvement suggestion in feedback.\n\nExamples:\n- Hook needs stronger curiosity.\n- CTA is weak.\n- Too generic.\n- Needs more founder perspective."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        816,
+        0
+      ],
+      "id": "d3564894-d7dd-425c-8634-cee86b699c40",
+      "name": "Content Quality Reviewer"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now }}",
+            "Topic": "={{ $('When chat message received').item.json.chatInput }}",
+            "Article_URL": "={{ $('Content Research Agent').item.json.output }}",
+            "Hook": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).hook }}",
+            "Readability": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).readability }}",
+            "Engagement": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).engagement }}",
+            "Authority": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).authority }}",
+            "Humanity": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).humanity }}",
+            "Overall": "={{ JSON.parse($('Content Quality Reviewer').item.json.output).overall }}",
+            "Status": "NEEDS_IMPROVEMENT",
+            "LinkedIn_Draft": "={{ $('LinkedIn Content Writer').item.json.output }}",
+            "Approval_status": "Auto Rejected",
+            "Attempt": "1",
+            "Reviewer_Feedback": "=={{ JSON.parse($('Content Quality Reviewer').item.json.output).feedback }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Article_URL",
+              "displayName": "Article_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hook",
+              "displayName": "Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Readability",
+              "displayName": "Readability",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Engagement",
+              "displayName": "Engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Authority",
+              "displayName": "Authority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Humanity",
+              "displayName": "Humanity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Overall",
+              "displayName": "Overall",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approval_status",
+              "displayName": "Approval_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Attempt",
+              "displayName": "Attempt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reviewer_Feedback",
+              "displayName": "Reviewer_Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Approved_Date",
+              "displayName": "Approved_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn_Draft",
+              "displayName": "LinkedIn_Draft",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1376,
+        96
+      ],
+      "id": "eb39748d-2852-40f1-867b-28cd8524ae37",
+      "name": "Append Rejected Content",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -592,
+        608
+      ],
+      "id": "0bf322e4-53a7-4070-accb-c57f9611e7d5",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "READY_FOR_REVIEW"
+            },
+            {
+              "lookupColumn": "Approval_status",
+              "lookupValue": "Pending"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -384,
+        608
+      ],
+      "id": "6169d0b9-c64c-4350-abab-a188d17d589f",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "adb4745b-c0e5-4833-8bea-c5e3ac4fc657",
+              "leftValue": "={{ $json.Approval_status }}",
+              "rightValue": "Pending",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -176,
+        528
+      ],
+      "id": "976a0ac1-6d2e-4c96-b179-ce0f7e595351",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "pulin2411@gmail.com",
+        "subject": "=LinkedIn Approval Required: {{$json.Topic}}",
+        "message": "=<h2>LinkedIn Draft Ready For Review</h2>\n\n<b>Topic:</b><br>\n{{$json.Topic}}\n\n<br><br>\n\n<b>Overall Score:</b>\n{{$json.Overall}}\n\n<br><br>\n\n<b>Article URL:</b><br>\n{{$json.Article_URL}}\n\n<br><br>\n\n<hr>\n\n<h3>Draft</h3>\n\n<pre>\n{{$json.LinkedIn_Draft}}\n</pre>\n\n<hr>\n\nPlease review and click:\n\n✅ Approve\n\nor\n\n❌ Reject",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        32,
+        512
+      ],
+      "id": "e76335e0-029e-4898-bf96-a346258c8b64",
+      "name": "Send message and wait for response",
+      "webhookId": "05138446-868f-4849-b79c-e887cf611ea0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nIqdXQSWKQRq2jU1",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "69e7a07a-b75e-4edc-bd4f-5e034de88c7d",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        240,
+        512
+      ],
+      "id": "e0e8eb4c-6c53-4e71-a5f6-275f0e89a0b2",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "Approval_status": "Approved",
+            "Status": "READY_TO_POST",
+            "Approved_Date": "={{$now}}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Article_URL",
+              "displayName": "Article_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hook",
+              "displayName": "Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Readability",
+              "displayName": "Readability",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Engagement",
+              "displayName": "Engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Authority",
+              "displayName": "Authority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Humanity",
+              "displayName": "Humanity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Overall",
+              "displayName": "Overall",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approval_status",
+              "displayName": "Approval_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Attempt",
+              "displayName": "Attempt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Reviewer_Feedback",
+              "displayName": "Reviewer_Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Approved_Date",
+              "displayName": "Approved_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LinkedIn_Draft",
+              "displayName": "LinkedIn_Draft",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        416
+      ],
+      "id": "6a25cedb-c2ad-4ccc-8c50-67e07ce410c3",
+      "name": "Update Approved row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "Approval_status": "Rejected",
+            "Status": "REJECTED",
+            "Attempt": "={{ Number($('Get row(s) in sheet').item.json.Attempt || 0) + 1 }}",
+            "Last_Updated": "={{$now}}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Article_URL",
+              "displayName": "Article_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hook",
+              "displayName": "Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Readability",
+              "displayName": "Readability",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Engagement",
+              "displayName": "Engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Authority",
+              "displayName": "Authority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Humanity",
+              "displayName": "Humanity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Overall",
+              "displayName": "Overall",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approval_status",
+              "displayName": "Approval_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Attempt",
+              "displayName": "Attempt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reviewer_Feedback",
+              "displayName": "Reviewer_Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Approved_Date",
+              "displayName": "Approved_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last_Updated",
+              "displayName": "Last_Updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn_Draft",
+              "displayName": "LinkedIn_Draft",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        448,
+        608
+      ],
+      "id": "9e186b7c-9c23-43ab-96ef-c39ea973c00e",
+      "name": "Update Rejected row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c96ffeda-3f8d-44ef-a55c-ae3d034c2f72",
+              "leftValue": "={{ Number($json.Attempt || 1) }}",
+              "rightValue": 3,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        656,
+        608
+      ],
+      "id": "0a22c60c-3ef6-446e-9589-795002588eda",
+      "name": "Check Rewrite Attempts"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=={{ `\nOriginal Draft:\n\n${$('Get row(s) in sheet').item.json.LinkedIn_Draft}\n\nReviewer Feedback:\n\n${$('Get row(s) in sheet').item.json.Reviewer_Feedback || 'Improve readability, hook, engagement and authority.'}\n\nRewrite the post.\nReturn only the revised LinkedIn post.\n` }}",
+        "options": {
+          "systemMessage": "You are an expert LinkedIn content editor.\n\nRewrite posts while maintaining the founder voice, improving readability, engagement, authority and human tone.\n\nReturn only the final LinkedIn post."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        848,
+        384
+      ],
+      "id": "ea53cdb4-ca89-49a6-baae-411167bdf6e8",
+      "name": "LinkedIn Rewrite Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.2",
+          "mode": "list",
+          "cachedResultName": "gpt-5.2"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        928,
+        624
+      ],
+      "id": "fa5bad67-f816-46b2-8713-27051f5a93d6",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "SNG1GGrpbdB84Pw3",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "LinkedIn_Draft": "={{ $json.output }}",
+            "Status": "READY_FOR_REVIEW",
+            "Approval_status": "Pending",
+            "Attempt": "={{ Number($('Get row(s) in sheet').item.json.Attempt || 1) + 1 }}",
+            "Last_Updated": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Article_URL",
+              "displayName": "Article_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hook",
+              "displayName": "Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Readability",
+              "displayName": "Readability",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Engagement",
+              "displayName": "Engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Authority",
+              "displayName": "Authority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Humanity",
+              "displayName": "Humanity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Overall",
+              "displayName": "Overall",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Approval_status",
+              "displayName": "Approval_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Attempt",
+              "displayName": "Attempt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Reviewer_Feedback",
+              "displayName": "Reviewer_Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Approved_Date",
+              "displayName": "Approved_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last_Updated",
+              "displayName": "Last_Updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn_Draft",
+              "displayName": "LinkedIn_Draft",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1232,
+        400
+      ],
+      "id": "b1463084-d2af-499b-a2bb-0e9d8c73aa28",
+      "name": "Update Rewritten Row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "Status": "HUMAN_REVIEW_REQUIRED",
+            "Approval_status": "Rejected",
+            "Last_Updated": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Article_URL",
+              "displayName": "Article_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hook",
+              "displayName": "Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Readability",
+              "displayName": "Readability",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Engagement",
+              "displayName": "Engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Authority",
+              "displayName": "Authority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Humanity",
+              "displayName": "Humanity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Overall",
+              "displayName": "Overall",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Approval_status",
+              "displayName": "Approval_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Attempt",
+              "displayName": "Attempt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Reviewer_Feedback",
+              "displayName": "Reviewer_Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Approved_Date",
+              "displayName": "Approved_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last_Updated",
+              "displayName": "Last_Updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn_Draft",
+              "displayName": "LinkedIn_Draft",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        976,
+        784
+      ],
+      "id": "1866b45c-2d36-4858-9fa8-16791400b1ba",
+      "name": "Human Review Required",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "pulin2411@gmail.com",
+        "subject": "=🚨 Human Review Required - {{$('Get row(s) in sheet').item.json.Topic}}",
+        "message": "=<h2>🚨 Human Review Required</h2>\n\n<p><b>Topic:</b><br>\n{{ $('Get row(s) in sheet').item.json.Topic }}</p>\n\n<p><b>Attempt:</b><br>\n{{ $('Check Rewrite Attempts').item.json.Attempt }}</p>\n\n<p><b>Status:</b><br>\nHUMAN_REVIEW_REQUIRED</p>\n\n<p><b>Article URL:</b><br>\n{{ $('Get row(s) in sheet').item.json.Article_URL }}</p>\n\n<hr>\n\n<p><b>Current Draft:</b></p>\n\n<pre>\n{{ $('Get row(s) in sheet').item.json.LinkedIn_Draft }}\n</pre>\n\n<hr>\n\n<p><b>Reviewer Feedback:</b></p>\n\n<pre>\n{{ $('Get row(s) in sheet').item.json.Reviewer_Feedback }}\n</pre>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1184,
+        784
+      ],
+      "id": "58cbbd67-163d-45b7-9705-0ef3165c5875",
+      "name": "Send a message",
+      "webhookId": "dea23dd5-111e-4f88-977c-83e3d30c4698",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "nIqdXQSWKQRq2jU1",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Content Research Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "LinkedIn Content Writer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Research Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpApi": {
+      "ai_tool": [
+        [
+          {
+            "node": "Content Research Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reviewer Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Quality Reviewer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append Rejected Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn Content Writer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Research Agent": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Content Writer": {
+      "main": [
+        [
+          {
+            "node": "Content Quality Reviewer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Quality Reviewer": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Update Approved row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Rejected row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Rejected row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Check Rewrite Attempts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Rewrite Attempts": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn Rewrite Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Human Review Required",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "LinkedIn Rewrite Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LinkedIn Rewrite Agent": {
+      "main": [
+        [
+          {
+            "node": "Update Rewritten Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human Review Required": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c32debf9-7f5d-41f3-9374-8eb71ff671c6",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "21d5bdab45ffbed9d2166d3a2fca82c7f4a0a14eb579a194e6f4381dc2b72b8a"
+  },
+  "nodeGroups": [],
+  "id": "gk2Z5AwfWnxNb2hH",
+  "tags": []
+}
