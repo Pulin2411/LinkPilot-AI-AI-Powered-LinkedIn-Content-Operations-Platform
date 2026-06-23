@@ -1,0 +1,80 @@
+# Google Sheet Schema
+
+The LinkedIn Automation Platform uses Google Sheets as the central content database.
+
+## Columns
+
+| Column            | Description                   | Example                      |
+| ----------------- | ----------------------------- | ---------------------------- |
+| Date              | Record creation date          | 2026-06-23                   |
+| Topic             | LinkedIn content topic        | AI Agents for SMBs           |
+| Article_URL       | Research article URL          | https://example.com/article  |
+| Hook              | Reviewer score                | 9                            |
+| Readability       | Reviewer score                | 8                            |
+| Engagement        | Reviewer score                | 9                            |
+| Authority         | Reviewer score                | 9                            |
+| Humanity          | Reviewer score                | 8                            |
+| Overall           | Average reviewer score        | 8.6                          |
+| Status            | Content lifecycle status      | READY_TO_POST                |
+| Approval_status   | Approval workflow status      | Approved                     |
+| Attempt           | Rewrite attempt counter       | 2                            |
+| Reviewer_Feedback | Reviewer comments             | Needs stronger hook          |
+| Approved_Date     | Approval timestamp            | 2026-06-23                   |
+| Last_Updated      | Last modification date        | 2026-06-23                   |
+| Scheduled_Date    | Future scheduled publish date | 2026-06-25                   |
+| Posting_Status    | Publishing status             | Posted                       |
+| Posted_Date       | LinkedIn publish timestamp    | 2026-06-25                   |
+| LinkedIn_URL      | Published post URL            | https://linkedin.com/...     |
+| Content_ID        | LinkedIn content identifier   | urn:li:share:123             |
+| Content_Type      | Content category              | LinkedIn Post                |
+| Posted_By         | Author                        | Pulin Shah                   |
+| Image_URL         | Generated image URL           | https://drive.google.com/... |
+| LinkedIn_Draft    | Generated LinkedIn content    | Full post text               |
+
+---
+
+## Status Values
+
+### Status
+
+| Value            | Meaning            |
+| ---------------- | ------------------ |
+| DRAFT            | Initial content    |
+| REWRITE_REQUIRED | Failed review      |
+| READY_TO_POST    | Approved and ready |
+| POSTED           | Published          |
+
+### Approval_status
+
+| Value    | Meaning           |
+| -------- | ----------------- |
+| Pending  | Awaiting approval |
+| Approved | Approved          |
+| Rejected | Rejected          |
+
+### Posting_Status
+
+| Value     | Meaning                  |
+| --------- | ------------------------ |
+| Pending   | Not yet posted           |
+| Scheduled | Waiting for publish date |
+| Posted    | Successfully published   |
+| Failed    | Publish failed           |
+
+---
+
+## Workflow
+
+Topic
+↓
+Research Article
+↓
+LinkedIn Draft
+↓
+Review Scores
+↓
+Approval
+↓
+Publishing
+↓
+Tracking
