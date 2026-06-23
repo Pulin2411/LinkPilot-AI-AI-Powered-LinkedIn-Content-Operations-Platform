@@ -1,0 +1,510 @@
+{
+  "name": "LinkedIn Image Generator1",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "3ef1eb8e-7de8-4fcc-aaa4-c65a1acf8973",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "READY_TO_POST"
+            },
+            {
+              "lookupColumn": "Approval_status",
+              "lookupValue": "Approved"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "46eaeae9-f748-4a96-91f6-f5dbe908a40a",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Topic:\n{{ $json.Topic }}\n\nLinkedIn Post:\n{{ $json.LinkedIn_Draft }}\n\nCreate a professional LinkedIn infographic image prompt based on the post.\n\nFocus on:\n- key business insight\n- human + AI collaboration\n- executive audience\n- LinkedIn engagement\n\nReturn one complete image-generation prompt.",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=You are an expert LinkedIn infographic designer specializing in AI, Automation, IT Leadership, Digital Transformation, Cloud Computing, Cybersecurity, and Business Technology topics.\n\nYour task is to convert a LinkedIn topic into a professional infographic image prompt suitable for posting on a personal LinkedIn profile.\n\nRequirements:\n\n* Maximum 250 words\n* Corporate and executive-level design\n* Modern LinkedIn-friendly style\n* High readability\n* Clean visual hierarchy\n* Dark navy blue and white color palette\n* Minimalist professional layout\n* Focus on business value and practical insights\n* Emphasize human + AI collaboration\n* Suitable for business owners, founders, CIOs, IT leaders, and decision makers\n\nGenerate a complete image-generation prompt.\n\nDo not label sections as:\nTitle:\nSubtitle:\nVisual Concept:\nDesign Notes:\n\nInstead, naturally describe the infographic layout, content, typography, branding, colors, visual hierarchy, and footer within a single continuous image-generation prompt.\n\nThe output must be directly usable by an AI image generator.\n CRITICAL REQUIREMENT\n\nThe infographic MUST contain a dedicated footer section.\n\nFooter Text:\n\nPulin Shah\nAI Consultant | Automation Specialist | IT Leader\n\nThe footer must be visually present in the image.\n\nThe image prompt must explicitly describe the footer.\n\nExample:\n\nBottom footer section:\nPulin Shah\nAI Consultant | Automation Specialist | IT Leader\n\nIf the footer is missing, regenerate the prompt.\n   Use subtle personal branding only.\n\nImportant Rules:\n\n* Do NOT use company branding\n* Do NOT use IntelliOps branding\n* Do NOT create advertisements\n* Do NOT include hashtags\n* Do NOT use markdown\n* Do NOT use JSON\n* Do NOT use bullet symbols\n* Do NOT use code formatting\n\nReturn only the final image generation prompt as plain text.\nThe final image prompt must explicitly describe the footer section containing:\n\nPulin Shah\nAI Consultant | Automation Specialist | IT Leader\n\nIf the footer is not included, the response is invalid."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        208,
+        0
+      ],
+      "id": "780841c3-3dfd-46c9-823b-3f25d5bf7d5d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.2",
+          "mode": "list",
+          "cachedResultName": "gpt-5.2"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        176,
+        192
+      ],
+      "id": "65285ba5-a8d8-45b3-9e5a-0a2dc200af1f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "SNG1GGrpbdB84Pw3",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w",
+          "mode": "list",
+          "cachedResultName": "LinkedIn_Content_Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1MIoCyY_XX6snHI9inpzuUwvmvStBfUsoqBtIE2frZ1w/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $('Get row(s) in sheet').item.json.row_number }}",
+            "Image_Prompt": "={{ $json.text }}",
+            "Image_Status": "READY_FOR_IMAGE",
+            "Image_Generated_Date": "={{ $now }}",
+            "Last_Updated": "={{ $now }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Topic",
+              "displayName": "Topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Article_URL",
+              "displayName": "Article_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Hook",
+              "displayName": "Hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Readability",
+              "displayName": "Readability",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Engagement",
+              "displayName": "Engagement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Authority",
+              "displayName": "Authority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Humanity",
+              "displayName": "Humanity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Overall",
+              "displayName": "Overall",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Approval_status",
+              "displayName": "Approval_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Attempt",
+              "displayName": "Attempt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Reviewer_Feedback",
+              "displayName": "Reviewer_Feedback",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Approved_Date",
+              "displayName": "Approved_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Last_Updated",
+              "displayName": "Last_Updated",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Scheduled_Date",
+              "displayName": "Scheduled_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Posting_Status",
+              "displayName": "Posting_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Posted_Date",
+              "displayName": "Posted_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "LinkedIn_URL",
+              "displayName": "LinkedIn_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Content_ID",
+              "displayName": "Content_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Content_Type",
+              "displayName": "Content_Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Content_Format",
+              "displayName": "Content_Format",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Posted_By",
+              "displayName": "Posted_By",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image_URL",
+              "displayName": "Image_URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Image_Prompt",
+              "displayName": "Image_Prompt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_Status",
+              "displayName": "Image_Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image_Generated_Date",
+              "displayName": "Image_Generated_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LinkedIn_Draft",
+              "displayName": "LinkedIn_Draft",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        560,
+        0
+      ],
+      "id": "2e468049-6a8f-4afa-91b7-a899fffa94ce",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "NByRPIjmnBw8CKSv",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ece2070f-357b-4ffa-9ae5-ae5c2a7f346a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "21d5bdab45ffbed9d2166d3a2fca82c7f4a0a14eb579a194e6f4381dc2b72b8a"
+  },
+  "nodeGroups": [],
+  "id": "PgF4Uizy7tJln1Vh",
+  "tags": []
+}
